@@ -31,6 +31,9 @@ if [ -z "$CASSANDRA_SEEDS" ]; then
 fi
 sed -i -e "s/- seeds: \"127.0.0.1\"/- seeds: \"$CASSANDRA_SEEDS\"/" $CASSANDRA_CONFIG/cassandra.yaml
 
+# Want to use random partitioner
+sed -i -e "s/partitioner: org.apache.cassandra.dht.Murmur3Partitioner/partitioner: org.apache.cassandra.dht.RandomPartitioner/" $CASSANDRA_CONFIG/cassandra.yaml
+
 # With virtual nodes disabled, we need to manually specify the token
 if [ -z "$CASSANDRA_TOKEN" ]; then
     echo "Missing initial token for Cassandra"
