@@ -4,7 +4,7 @@
 #
 # Starts a Cassandra instance constituting a one node cluster. 
 
-FROM gbjk/cassandra:2.0.12
+FROM gbjk/cassandra:base
 
 USER root
 
