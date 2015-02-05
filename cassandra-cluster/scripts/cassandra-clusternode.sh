@@ -21,15 +21,20 @@ sed -i -e "s/^listen_address.*/listen_address: $IP/" $CASSANDRA_CONFIG/cassandra
 
 # Configure Cassandra seeds
 if [ -z "$CASSANDRA_SEEDS" ]; then
-	echo "No seeds specified, being my own seed..."
-	CASSANDRA_SEEDS=$SEEDS
+    if [ -z "$SEED_PORT_7000_TCP_ADDR" ]; then
+        echo "No seeds specified, being my own seed..."
+        CASSANDRA_SEEDS=$SEEDS
+    else
+        echo "Using SEED from docker env..."
+        CASSANDRA_SEEDS=$SEED_PORT_7000_TCP_ADDR
+    fi
 fi
 sed -i -e "s/- seeds: \"127.0.0.1\"/- seeds: \"$CASSANDRA_SEEDS\"/" $CASSANDRA_CONFIG/cassandra.yaml
 
 # With virtual nodes disabled, we need to manually specify the token
 if [ -z "$CASSANDRA_TOKEN" ]; then
-	echo "Missing initial token for Cassandra"
-	exit -1
+    echo "Missing initial token for Cassandra"
+    exit -1
 fi
 echo "JVM_OPTS=\"\$JVM_OPTS -Dcassandra.initial_token=$CASSANDRA_TOKEN\"" >> $CASSANDRA_CONFIG/cassandra-env.sh
 

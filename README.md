@@ -1,7 +1,7 @@
 Cassandra in Docker
 ===
 
-This repository provides everything you need to run Cassandra in Docker, and is tuned for fast
+This repository is a clone of the spotify cassandra docker images. It provides everything you need to run Cassandra in Docker, and is tuned for fast
 container startup.
 
 Why?
@@ -14,20 +14,30 @@ Optimizations include:
 * Disabling something called "waiting for gossip to settle down" because there is no gossip in a
   one-node cluster (another ~10 sec).
 
+Examples
+--------
+# Get some tokens
+docker run gbjk/cassandra:2.0.12 token-generator 3
+# Run the primary node
+docker run -d --env CASSANDRA_TOKEN=0 -p 127.0.10.1:9042:9042 --name cdb01 gbjk/cassandra:cluster
+# Now run two more, linked to the first
+docker run -d --env CASSANDRA_TOKEN=$SECOND_TOKEN -p 127.0.10.1:9042:9042 --link cdb01:seed --name cdb02 gbjk/cassandra:cluster
+docker run -d --env CASSANDRA_TOKEN=$THIRD_TOKEN -p 127.0.10.1:9042:9042 --link cdb01:seed --name cdb03 gbjk/cassandra:cluster
+
 In the box
 ---
-* **spotify/cassandra**
+* **gbjk/cassandra**
 
   This is probably the image you want, it runs a one-node Cassandra cluster.
   Built from the `cassandra` directory.
 
-* **spotify/cassandra:cluster**
+* **gbjk/cassandra:cluster**
 
   Runs a Cassandra cluster. Expects `CASSANDRA_SEEDS` and `CASSANDRA_TOKEN` env variables to be set.
-  If `CASSANDRA_SEEDS` is not set, node acts as its own seed. If `CASSANDRA_TOKEN` is not set, the
+  If `CASSANDRA_SEEDS` is not set, node acts as its own seed, unless linked to a docker container named seed. If `CASSANDRA_TOKEN` is not set, the
   container will not run. Built from the `cassandra-cluster` directory.
 
-* **spotify/cassandra:base**
+* **gbjk/cassandra:base**
 
   The base image with an unconfigured Cassandra installation. You probably don't want to use this
   directly. Built from the `cassandra-base` directory.
