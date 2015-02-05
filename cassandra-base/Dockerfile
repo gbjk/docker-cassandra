@@ -17,9 +17,9 @@ RUN echo "deb http://debian.datastax.com/community stable main" > /etc/apt/sourc
 # Workaround for https://github.com/docker/docker/issues/6345
 RUN ln -s -f /bin/true /usr/bin/chfn
 
-# Install Cassandra 2.0.10
+# Install Cassandra 2.0.12
 RUN apt-get update && \
-    apt-get install -y cassandra=2.0.10 dsc20=2.0.10-1 && \
+    apt-get install -y cassandra=2.0.12 dsc20=2.0.12-1 && \
     rm -rf /var/lib/apt/lists/*
 
 ENV CASSANDRA_CONFIG /etc/cassandra
