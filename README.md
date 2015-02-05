@@ -17,7 +17,7 @@ Optimizations include:
 Examples
 --------
 # Get some tokens
-docker run gbjk/cassandra:2.0.12 token-generator 3
+docker run gbjk/cassandra:base token-generator 3
 # Run the primary node
 docker run -d --env CASSANDRA_TOKEN=0 -p 127.0.10.1:9042:9042 --name cdb01 gbjk/cassandra:cluster
 # Now run two more, linked to the first
